@@ -1,0 +1,3 @@
+require "./languages"
+
+run Cuba

@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  api:
+    build: .
+    ports:
+      - "4455:3000"
+    command: "bundle exec puma -b tcp://0.0.0.0:3000"
+    environment:
+      - DB_HOSTNAME=db:27017
+    volumes:
+      - "./log:/usr/src/app/log"
+  db:
+    image: mongo
