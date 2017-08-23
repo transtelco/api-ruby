@@ -1,7 +1,26 @@
 require "cuba"
 require "cuba/safe"
 require "json"
+require "diplomat"
+require "socket"
 
+hostname = Socket.gethostname
+puts "URL: http://#{hostname}:5001"
+
+Diplomat.configure do |config|
+  config.url = "http://#{ENV['CONSUL_HOST']}:#{ENV['CONSUL_PORT']}" 
+end
+
+Diplomat::Service.register({ 
+  name: "api-ruby",
+  address: hostname,
+  port: 5001,
+  tags: ["language"],
+  checks: [{
+    url: "http://#{hostname}:#{5001}/health",
+    interval: "5s"
+  }]
+})
 
 likes=0
 Cuba.use Rack::Session::Cookie, :secret => "__a_very_long_string__"
@@ -11,6 +30,8 @@ Cuba.plugin Cuba::Safe
 Cuba.define do
         on get do
                 on "health" do
+                        puts "GET - health"
+                        res.status = 200
                         res.write "healthy"
                 end
 
