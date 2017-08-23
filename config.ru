@@ -1,3 +1,0 @@
-require "./languages"
-
-run Cuba

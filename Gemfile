@@ -1,13 +1,9 @@
 
 source "https://rubygems.org"
 
-gem 'cuba'
-gem 'puma'
+gem 'thin'
 gem 'json'
-gem 'rack-protection'
+gem 'sinatra'
 
 # Consul
 gem 'diplomat'
-
-# Token
-gem 'rack-jwt'

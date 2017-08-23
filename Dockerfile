@@ -6,4 +6,5 @@ RUN mkdir /usr/src/app /usr/src/app/tmp && apk update && apk add curl-dev ruby-d
 WORKDIR /usr/src/app
 COPY ./Gemfile /usr/src/app
 RUN bundle install
+EXPOSE 4567
 COPY . /usr/src/app

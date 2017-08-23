@@ -1,11 +1,14 @@
-require "cuba"
-require "cuba/safe"
+require "sinatra"
 require "json"
 require "diplomat"
 require "socket"
 
 hostname = Socket.gethostname
-puts "URL: http://#{hostname}:5001"
+port = 4567
+
+puts "###############################"
+puts "URL: http://#{hostname}:#{port}"
+puts "###############################"
 
 Diplomat.configure do |config|
   config.url = "http://#{ENV['CONSUL_HOST']}:#{ENV['CONSUL_PORT']}" 
@@ -14,48 +17,39 @@ end
 Diplomat::Service.register({ 
   name: "api-ruby",
   address: hostname,
-  port: 5001,
+  port: port,
   tags: ["language"],
   checks: [{
-    url: "http://#{hostname}:#{5001}/health",
+    http: "http://#{hostname}:#{port}/health",
     interval: "5s"
   }]
 })
 
 likes=0
-Cuba.use Rack::Session::Cookie, :secret => "__a_very_long_string__"
 
-Cuba.plugin Cuba::Safe
+set :bind, '0.0.0.0'
 
-Cuba.define do
-        on get do
-                on "health" do
-                        puts "GET - health"
-                        res.status = 200
-                        res.write "healthy"
-                end
+get "/health" do
+  "healthy"
+end
 
-                on "language" do
-                        res.write(JSON.dump({ 
-                                name: 'ruby',
-                                description: 'a dying language',
-                                likes: likes 
-                        }))
+get "/language" do
+  json({ 
+    name: 'ruby',
+    description: 'a dying language',
+    likes: likes 
+  })
+end
 
-                end
+get "/" do
+  "Go to /language, the good stuff is there"
+end
 
-                on root do
-                        res.redirect "/language"
-                end
-        end
-        on post do
-                on "language/like" do
-                        likes=likes+1
-                        res.write(JSON.dump({ 
-                                name: 'ruby',
-                                description: 'a dying language',
-                                likes: likes 
-                        }))
-                end
-        end
+post "l/anguage/like" do
+  likes=likes+1
+  json({ 
+    name: 'ruby',
+    description: 'a dying language',
+    likes: likes 
+  })
 end
