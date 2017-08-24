@@ -45,7 +45,7 @@ get "/" do
   "Go to /language, the good stuff is there"
 end
 
-post "l/anguage/like" do
+post "language/like" do
   likes=likes+1
   json({ 
     name: 'ruby',
