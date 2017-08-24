@@ -34,7 +34,7 @@ get "/health" do
 end
 
 get "/language" do
-  json({ 
+  JSON({ 
     name: 'ruby',
     description: 'a dying language',
     likes: likes 
@@ -47,7 +47,7 @@ end
 
 post "/language/like" do
   likes=likes+1
-  json({ 
+  JSON({ 
     name: 'ruby',
     description: 'a dying language',
     likes: likes 
